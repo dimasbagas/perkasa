@@ -98,39 +98,39 @@ export default ComponentAkunSaya;
 const styles = StyleSheet.create({
   container: {
     width: "90%",
-    marginTop: 90,
+    marginTop: 30,
     marginBottom: 20,
   },
 
   cardName: {
-    backgroundColor: "#EDE9FF",
+    backgroundColor: "#dbf5ddff",
     padding: 15,
-    borderRadius: 18,
+    borderRadius: 12,
     alignItems: "center",
-    shadowColor: "#000",
+    shadowColor: "#158344ff",
     shadowOpacity: 0.15,
     shadowOffset: { width: 0, height: 4 },
     shadowRadius: 7,
-    elevation: 4,
-    margin: 15,
+    elevation: 1,
+    margin: 10,
   },
 
   nameText: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#4A3F87",
+    color: "#000000ff",
   },
 
   cardDetail: {
-    marginTop: 20,
-    backgroundColor: "#EDE9FF",
+    marginTop: 5,
+    backgroundColor: "#dbf5ddff",
     padding: 20,
-    borderRadius: 18,
-    shadowColor: "#000",
+    borderRadius: 12,
+    shadowColor: "#158344ff",
     shadowOpacity: 0.15,
-    elevation: 4,
-    gap: 10,
-    margin: 15,
+    elevation: 1,
+    gap: 15,
+    margin: 10,
   },
 
   row: {
@@ -150,26 +150,27 @@ const styles = StyleSheet.create({
   btn: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 15,
-    backgroundColor: "#EDE9FF",
-    padding: 15,
-    borderRadius: 18,
-    shadowColor: "#000",
+    marginTop: 5,
+    backgroundColor: "#fe5454ff",
+    padding: 10,
+    borderRadius: 12,
+    shadowColor: "#158344ff",
     shadowOpacity: 0.15,
-    elevation: 4,
+    elevation: 1,
     justifyContent: "center",
-    margin: 15,
+    margin: 10,
   },
 
   btnIcon: {
     width: 20,
     height: 20,
     marginRight: 10,
-    tintColor: "#555",
+    tintColor: "#ffffffff",
   },
 
   btnText: {
     fontSize: 16,
     fontWeight: "600",
+    color: "#ffffffff",
   },
 });

@@ -1,7 +1,7 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const TabBar = ({ state, navigation }) => {
-  const activeColor = '#226e3fff';
+  const activeColor = '#124f29ff';
   const inactiveColor = '#ffffffff';
 
   const icons = {
@@ -47,8 +47,8 @@ const TabBar = ({ state, navigation }) => {
             <Image
               source={icons[route.name]}
               style={{
-                width: 35,
-                height: 35,
+                width: 30,
+                height: 30,
                 tintColor: isFocused ? activeColor : inactiveColor,
               }}
             />
@@ -74,22 +74,23 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     bottom: 50,
-    left: 20,
-    right: 20,
+    left: 19,
+    right: 19,
     flexDirection: 'row',
-    backgroundColor: '#74cd98ff',
-    paddingVertical: 10,
-    borderRadius: 28,
+    backgroundColor: '#16994aff',
+    paddingVertical: 5,
+    borderRadius: 20,
     borderCurve: 'continuous',
     shadowColor: '#86f08fff',
     shadowOpacity: 0.15,
     shadowOffset: { width: 0, height: 5 },
     shadowRadius: 4,
     elevation: 5,
+    justifyContent: 'center',
   },
 
   tabItem: {
-    flex: 1,
+    marginHorizontal: 12,
     alignItems: 'center',
     justifyContent: 'center',
   },
