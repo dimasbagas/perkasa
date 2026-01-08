@@ -79,7 +79,7 @@ const ComponentAkunSaya = () => {
           source={require("../../assets/icons/Time.png")}
           style={styles.btnIcon}
         />
-        <Text style={styles.btnText}>Logout</Text>
+        <Text style={styles.btnText}>Log Out</Text>
       </TouchableOpacity>
 
     </View>
