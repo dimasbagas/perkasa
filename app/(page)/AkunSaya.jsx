@@ -13,15 +13,7 @@ const AkunSaya = () => {
           resizeMode="cover"
         />
       </View>
-{/* 
-      <View style={styles.profileCircle}>
-        <Image
-          source={require("../../assets/icons/Account.png")}
-          style={{ width: 80, height: 80, tintColor: "#A5A5A5" }}
-        />
-      </View> */}
       <ComponentAkunSaya />
-
     </View>
   );
 };

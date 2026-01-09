@@ -1,20 +1,41 @@
-import React, { useState } from 'react';
-import { View, TextInput, FlatList, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import React, { useState } from "react";
+import {
+  View,
+  TextInput,
+  FlatList,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
+
+const API_URL = "https://www.sankavollerei.com/anime/search/boruto";
 
 const CariJudulBuku = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const searchBooks = async (term) => {
-    if (!term.trim()) return;
+    if (!term.trim()) {
+      setBooks([]);
+      return;
+    }
+
     setLoading(true);
+
     try {
-      const response = await fetch(`https://api.example.com/books/search?q=${encodeURIComponent(term)}`);
+      const response = await fetch(
+        `${API_URL}?q=${encodeURIComponent(term)}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Gagal mengambil data");
+      }
+
       const data = await response.json();
-      setBooks(data);
+      setBooks(Array.isArray(data) ? data : []);
     } catch (error) {
-      console.error('Error searching books:', error);
+      console.error("Error searching books:", error);
       setBooks([]);
     } finally {
       setLoading(false);
@@ -23,8 +44,10 @@ const CariJudulBuku = () => {
 
   const renderBook = ({ item }) => (
     <View style={styles.bookItem}>
-      <Text style={styles.title}>{item.title}</Text>
-      <Text style={styles.author}>by {item.author}</Text>
+      <Text style={styles.title}>{item.title ?? "-"}</Text>
+      <Text style={styles.author}>
+        {item.author ? `by ${item.author}` : "Unknown author"}
+      </Text>
     </View>
   );
 
@@ -36,49 +59,69 @@ const CariJudulBuku = () => {
         value={searchTerm}
         onChangeText={setSearchTerm}
         onSubmitEditing={() => searchBooks(searchTerm)}
+        returnKeyType="search"
       />
-      {loading && <ActivityIndicator size="large" color="#0000ff" />}
+
+      {loading && (
+        <ActivityIndicator size="large" color="#5D7BF4" />
+      )}
+
       <FlatList
         data={books}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(item) =>
+          item.id ? item.id.toString() : Math.random().toString()
+        }
         renderItem={renderBook}
         style={styles.list}
+        ListEmptyComponent={
+          !loading && (
+            <Text style={styles.empty}>
+              Tidak ada buku ditemukan
+            </Text>
+          )
+        }
       />
     </View>
   );
 };
 
+export default CariJudulBuku;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: "#fff",
   },
   input: {
-    width: '100%',
+    width: "100%",
     height: 49,
-    borderColor: 'gray',
+    borderColor: "#ccc",
     borderWidth: 1,
-    marginBottom: 16,
-    paddingHorizontal: 8,
-    borderRadius: 20,
-    paddingLeft: 20,
+    marginBottom: 12,
+    paddingHorizontal: 16,
+    borderRadius: 25,
+    backgroundColor: "#fafafa",
   },
   list: {
     flex: 1,
   },
   bookItem: {
-    padding: 16,
+    paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: "#eee",
   },
   title: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: "600",
   },
   author: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
+    marginTop: 4,
+  },
+  empty: {
+    textAlign: "center",
+    marginTop: 20,
+    color: "#999",
   },
 });
-
-export default CariJudulBuku;
