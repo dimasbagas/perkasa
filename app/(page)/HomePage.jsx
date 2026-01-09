@@ -28,21 +28,17 @@ const HomePage = () => {
         showsVerticalScrollIndicator={false}
         renderItem={() => (
           <>
-            {/* SEARCH */}
             <Search />
 
-            {/* KATEGORI (NAVIGASI SAJA) */}
             <View style={{ paddingVertical: 16 }}>
               <KategoriTema data={dataKategori} />
             </View>
 
-            {/* REKOMENDASI UMUM */}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Rekomendasi Buku</Text>
               <RekomendasiBuku />
             </View>
 
-            {/* POPULER UMUM */}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Buku Populer</Text>
               <BukuPopuler />
@@ -55,7 +51,6 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
 
 const styles = StyleSheet.create({
   container: {

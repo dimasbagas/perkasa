@@ -22,7 +22,6 @@ export default function KategoriTema({ data = [] }) {
         contentContainerStyle={styles.scrollContainer}
       >
         {data.map((item) => {
-          // 🔥 aktif HANYA jika sedang di halaman kategori tersebut
           const active = pathname === `/kategori/${item.id}`;
 
           return (

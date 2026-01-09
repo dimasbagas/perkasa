@@ -28,7 +28,7 @@ const kategoriQuery = {
 };
 
 const KategoriTemaPage = () => {
-  const { id } = useLocalSearchParams(); // ← dari Home
+  const { id } = useLocalSearchParams(); 
   const router = useRouter();
 
   const [books, setBooks] = useState([]);
@@ -110,14 +110,12 @@ const KategoriTemaPage = () => {
 
 export default KategoriTemaPage;
 const styles = StyleSheet.create({
-  /* ===== PAGE ===== */
   container: {
     flex: 1,
     backgroundColor: "#ffffff",
     paddingTop: 20,
   },
 
-  /* ===== HEADER ===== */
   header: {
     fontSize: 24,
     fontWeight: "700",
@@ -132,7 +130,6 @@ const styles = StyleSheet.create({
     marginVertical: 12,
   },
 
-  /* ===== GRID ===== */
   list: {
     paddingHorizontal: 16,
     paddingBottom: 100,
@@ -144,12 +141,12 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    width: "48%",              // 🔥 2 kolom fix
+    width: "48%",              
   },
 
   cover: {
     width: "100%",
-    height: 240,               // 🔥 TIDAK RAMPING
+    height: 240,            
     borderRadius: 16,
     backgroundColor: "#e5e5e5",
   },

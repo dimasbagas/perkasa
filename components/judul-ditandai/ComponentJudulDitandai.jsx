@@ -20,9 +20,6 @@ const ComponentJudulDitandai = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  /* =========================
-     LOAD DATA SETIAP HALAMAN DIFOKUSKAN
-     ========================= */
   const fetchSavedBooks = async () => {
     try {
       const data = await AsyncStorage.getItem(STORAGE_KEY);
@@ -66,9 +63,8 @@ const ComponentJudulDitandai = () => {
     }, [])
   );
 
-  /* =========================
-     HAPUS BUKU DARI DITANDAI
-     ========================= */
+
+    //  HAPUS BUKU DARI DITANDAI
   const removeBook = async (id) => {
     try {
       const data = await AsyncStorage.getItem(STORAGE_KEY);
@@ -77,7 +73,6 @@ const ComponentJudulDitandai = () => {
       ids = ids.filter((x) => x !== id);
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
 
-      // 🔥 update UI langsung (tanpa reload)
       setBooks((prev) => prev.filter((b) => b.id !== id));
     } catch (e) {
       console.log("Error remove book:", e);

@@ -11,7 +11,7 @@ const HomeSearch = () => {
     >
       <TextInput
         placeholder="Cari judul buku..."
-        editable={false}   // 🔥 penting
+        editable={false}   
         pointerEvents="none"
         style={{
           backgroundColor: "#f1f1f1",

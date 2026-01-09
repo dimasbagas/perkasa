@@ -13,14 +13,11 @@ import {
 const Otp = () => {
   const router = useRouter();
 
-  const [step, setStep] = useState("email"); // email | otp
+  const [step, setStep] = useState("email"); 
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // ============================
-  // STEP 1 — VERIFIKASI EMAIL
-  // ============================
   const handleVerifyEmail = async () => {
     if (!email) {
       Alert.alert("Error", "Email wajib diisi");

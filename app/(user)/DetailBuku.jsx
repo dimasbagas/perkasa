@@ -23,9 +23,6 @@ const DetailBuku = () => {
     checkSaved();
   }, []);
 
-  /* =========================
-     FETCH DETAIL (SEMENTARA GOOGLE)
-     ========================= */
   const fetchDetail = async () => {
     try {
       const res = await fetch(
@@ -33,7 +30,6 @@ const DetailBuku = () => {
       );
       const json = await res.json();
 
-      // 🔥 MAPPER GOOGLE → BOOK STANDAR
       const mappedBook = mapGoogleBook(json);
       setBook(mappedBook);
     } catch (e) {
@@ -51,7 +47,6 @@ const DetailBuku = () => {
   rating: item.volumeInfo.averageRating ?? null,
   pages: item.volumeInfo.pageCount ?? null,
 });
-
 
   /* =========================
      CEK BUKU TERSIMPAN

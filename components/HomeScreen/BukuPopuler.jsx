@@ -27,7 +27,6 @@ const Home = () => {
       );
       const json = await response.json();
 
-      // ambil buku yang punya cover, max 10
       const filtered = (json.items || [])
         .filter((item) => item.volumeInfo?.imageLinks?.thumbnail)
         .slice(0, 10);
@@ -44,7 +43,6 @@ const Home = () => {
   const renderItem = ({ item }) => {
     const info = item.volumeInfo;
 
-    // 🔥 FIX UTAMA: cukup ganti http -> https
 const imageUrl =
   "http://books.google.com/books/content?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=4&edge=curl&imgtk=...&source=gbs_api"
     .replace("http://", "https://");

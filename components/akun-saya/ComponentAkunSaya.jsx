@@ -65,9 +65,8 @@ const ComponentAkunSaya = () => {
     }
   };
 
-  // =====================
+
   // LOGOUT
-  // =====================
   const handleLogout = () => {
     Alert.alert(
       "Logout",

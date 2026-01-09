@@ -98,7 +98,6 @@ const PencarianBuku = () => {
 
 export default PencarianBuku;
 
-/* ===== MAPPER ===== */
 const mapGoogleBook = (item) => ({
   id: item.id,
   title: item.volumeInfo.title,
@@ -108,7 +107,6 @@ const mapGoogleBook = (item) => ({
     "https://via.placeholder.com/150x220?text=No+Cover",
 });
 
-/* ===== STYLE ===== */
 const styles = StyleSheet.create({
   container: {
     flex: 1,
