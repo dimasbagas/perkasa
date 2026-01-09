@@ -22,6 +22,7 @@ export default function KategoriTema({ data = [] }) {
         contentContainerStyle={styles.scrollContainer}
       >
         {data.map((item) => {
+          // 🔥 aktif HANYA jika sedang di halaman kategori tersebut
           const active = pathname === `/kategori/${item.id}`;
 
           return (
@@ -29,13 +30,15 @@ export default function KategoriTema({ data = [] }) {
               key={item.id}
               onPress={() =>
                 router.push({
-                  pathname: "/kategori/[id]",
+                  pathname: "../../(user)/kategori/[id]",
                   params: { id: item.id },
                 })
               }
               style={[styles.pill, active && styles.pillActive]}
             >
-              <Text style={[styles.pillText, active && styles.pillTextActive]}>
+              <Text
+                style={[styles.pillText, active && styles.pillTextActive]}
+              >
                 {item.name}
               </Text>
             </TouchableOpacity>
