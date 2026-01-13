@@ -122,6 +122,7 @@ const styles = StyleSheet.create({
     color: "#305763",
     paddingHorizontal: 20,
     marginBottom: 16,
+    marginTop: 50,
   },
 
   info: {

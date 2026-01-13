@@ -30,7 +30,7 @@ const ComponentAkunSaya = () => {
       }
 
       const response = await fetch(
-        "http://10.0.2.2:8000/user/members/",
+        "http://opac.pamekasankab.go.id:8000/user/members/",
         {
           headers: {
             Authorization: `Token ${user.token}`,

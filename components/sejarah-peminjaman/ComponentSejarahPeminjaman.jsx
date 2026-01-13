@@ -10,7 +10,7 @@ const ComponentSejarahPeminjaman = () => {
 
   const fetchHistory = async () => {
     try {
-      const response = await fetch('http://10.0.2.2:8000/api/biblio/');
+      const response = await fetch('http://opac.pamekasankab.go.id:8000/api/biblio/');
       const data = await response.json();
       setHistory(data);
     } catch (error) {
