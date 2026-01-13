@@ -44,31 +44,31 @@ const styles = StyleSheet.create({
   wrapper: {
     marginTop: 10,
     marginBottom: 5,
-    height: 70,
+    width: "100%",
   },
   title: {
     fontSize: 18,
     fontWeight: "700",
     marginBottom: 10,
-    marginLeft: 10,
+    // marginLeft: 10,
   },
   scrollContainer: {
     paddingHorizontal: 10,
   },
   pill: {
     borderWidth: 2,
-    borderColor: "#70A284",
+    borderColor: "#16994aff",
     paddingHorizontal: 16,
     paddingVertical: 6,
     borderRadius: 20,
     marginRight: 10,
   },
   pillActive: {
-    backgroundColor: "#70A284",
+    backgroundColor: "#16994aff",
   },
   pillText: {
     fontSize: 14,
-    color: "#70A284",
+    color: "#16994aff",
     fontWeight: "500",
   },
   pillTextActive: {

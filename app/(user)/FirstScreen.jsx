@@ -21,7 +21,7 @@ const FirstScreen = () => {
     Animated.parallel([
       Animated.timing(opacity, {
         toValue: 1,
-        duration: 1200,
+        duration: 3000,
         useNativeDriver: true,
       }),
       Animated.spring(scale, {
@@ -38,7 +38,7 @@ const FirstScreen = () => {
     ]).start();
 
     const timer = setTimeout(() => {
-      router.replace('/(user)/FirstScreen');
+      router.replace('/(user)/Login');
     }, 5000);
 
     return () => clearTimeout(timer);

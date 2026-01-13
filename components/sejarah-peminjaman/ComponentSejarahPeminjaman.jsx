@@ -10,7 +10,7 @@ const ComponentSejarahPeminjaman = () => {
 
   const fetchHistory = async () => {
     try {
-      const response = await fetch('https://8c391e4349a3.ngrok-free.app/api/biblio/');
+      const response = await fetch('https://multispeed-formulaically-taunya.ngrok-free.dev/api/biblio/');
       const data = await response.json();
       setHistory(data);
     } catch (error) {

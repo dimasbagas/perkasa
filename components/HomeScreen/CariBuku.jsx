@@ -1,56 +1,38 @@
-import React, { useState } from 'react';
-import { View, TextInput, StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router';
+import { View, TextInput, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
-const CariBuku = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const router = useRouter();
-
+const CariBuku = ({ value, onChangeText }) => {
   return (
-    <View style={styles.container}>
+    <View style={style.container}>
+      <Ionicons name="search" size={20} color="#305763" />
       <TextInput
-        style={styles.input}
-        placeholder="Cari buku..."
-        value={searchTerm}
-        onChangeText={setSearchTerm}
-        onSubmitEditing={() => router.push('/page/CariJudulBuku')}
+        placeholder="Cari buku...."
+        value={value}
+        onChangeText={onChangeText}
+        style={style.input}
       />
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+export default CariBuku;
+
+const style = StyleSheet.create({
   container: {
-    padding: 16,
-    height:70
+      display: 'flex',
+      minHeight: 50, 
+      width: '90%', 
+      paddingHorizontal: 20,
+      borderWidth:1.5,
+      borderColor: "#16994aff",
+      borderRadius: 20,
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginTop: 50,
   },
   input: {
-    width: 328,
-    height: 49,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 16,
-    paddingHorizontal: 8,
-    borderRadius: 20,
-    border: "nome",
-    paddingLeft: 20,
-  },
-  list: {
     flex: 1,
-  },
-  bookItem: {
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  author: {
-    fontSize: 14,
-    color: '#666',
+    height: 45,
+    fontSize: 16,
   },
 });
-
-export default CariBuku;

@@ -29,7 +29,7 @@ const Login = () => {
         password
       );
       const response = await fetch(
-        "https://9dec003548aa.ngrok-free.app/auth/login/",
+        "https://multispeed-formulaically-taunya.ngrok-free.dev/auth/login/",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -49,7 +49,7 @@ const Login = () => {
 
           try {
             const memberResponse = await fetch(
-              "https://9dec003548aa.ngrok-free.app/auth/users/",
+              "https://multispeed-formulaically-taunya.ngrok-free.dev/auth/users/",
               {
                 method: "GET",
                 headers: {
@@ -79,7 +79,7 @@ const Login = () => {
         }
 
         Alert.alert("Success", "Login successful");
-        router.push("/page/HomePage");
+        router.push("/(page)/HomePage");
       } else {
         Alert.alert("Error", data.message || "Login failed");
       }

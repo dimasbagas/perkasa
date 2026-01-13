@@ -90,9 +90,8 @@ const styles = StyleSheet.create({
   },
 
   tabItem: {
-    marginHorizontal: 12,
+    marginHorizontal: 10,
     alignItems: 'center',
-    justifyContent: 'center',
   },
 });
 

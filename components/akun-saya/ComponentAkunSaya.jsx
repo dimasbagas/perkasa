@@ -16,7 +16,7 @@ const ComponentAkunSaya = () => {
       if (!user) return setLoading(false);
 
       const response = await fetch(
-        "https://9dec003548aa.ngrok-free.app/user/members/",
+        "https://multispeed-formulaically-taunya.ngrok-free.dev/user/members/",
         {
           headers: { Authorization: `Token ${user.token}` },
         }
