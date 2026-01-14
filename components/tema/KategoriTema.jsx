@@ -6,12 +6,12 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { useRouter, usePathname } from "expo-router";
 
-export default function KategoriTema({
-  data = [],
-  selected,
-  onSelect = () => {},
-}) {
+export default function KategoriTema({ data = [] }) {
+  const router = useRouter();
+  const pathname = usePathname();
+
   return (
     <View style={styles.wrapper}>
       <Text style={styles.title}>Kategori</Text>
@@ -22,14 +22,22 @@ export default function KategoriTema({
         contentContainerStyle={styles.scrollContainer}
       >
         {data.map((item) => {
-          const active = selected === item.id;
+          const active = pathname === `/kategori/${item.id}`;
+
           return (
             <TouchableOpacity
               key={item.id}
-              onPress={() => onSelect(item.id)}
+              onPress={() =>
+                router.push({
+                  pathname: "../../(user)/kategori/[id]",
+                  params: { id: item.id },
+                })
+              }
               style={[styles.pill, active && styles.pillActive]}
             >
-              <Text style={[styles.pillText, active && styles.pillTextActive]}>
+              <Text
+                style={[styles.pillText, active && styles.pillTextActive]}
+              >
                 {item.name}
               </Text>
             </TouchableOpacity>
@@ -39,7 +47,6 @@ export default function KategoriTema({
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   wrapper: {
     marginTop: 10,

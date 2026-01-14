@@ -1,204 +1,193 @@
-import { useEffect, useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
   View,
+  Text,
+  Image,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
 } from "react-native";
-import Delete from "../../assets/icons/Delete.png";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter, useFocusEffect } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+
+const API_KEY = "AIzaSyAdkiRhqRdPGg4jym8ZrzzUhoHk33aBxZI";
+const STORAGE_KEY = "saved_books";
 
 const ComponentJudulDitandai = () => {
-  const [bookmarks, setBookmarks] = useState([]);
-  const [isDeleteMode, setIsDeleteMode] = useState(false);
-  const [selectedIds, setSelectedIds] = useState([]);
+  const router = useRouter();
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchBookmarks();
-  }, []);
-
-  const fetchBookmarks = async () => {
+  const fetchSavedBooks = async () => {
     try {
-      const response = await fetch(
-        "https://9dec003548aa.ngrok-free.app/api/bookmarks/"
-      );
-      const data = await response.json();
-      setBookmarks(data);
-    } catch (error) {
-      console.error("Error fetching bookmarks:", error);
-      setBookmarks([]);
+      const data = await AsyncStorage.getItem(STORAGE_KEY);
+      const ids = data ? JSON.parse(data) : [];
+
+      if (ids.length === 0) {
+        setBooks([]);
+        return;
+      }
+
+      const results = [];
+
+      for (const id of ids) {
+        const res = await fetch(
+          `https://www.googleapis.com/books/v1/volumes/${id}?key=${API_KEY}`
+        );
+        const json = await res.json();
+
+        results.push({
+          id: json.id,
+          title: json.volumeInfo.title,
+          author: json.volumeInfo.authors?.join(", ") ?? "-",
+          cover: json.volumeInfo.imageLinks?.thumbnail
+            ?.replace("http://", "https://"),
+        });
+      }
+
+      setBooks(results);
+    } catch (e) {
+      console.log("Error load saved books:", e);
+      setBooks([]);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const toggleSelect = (id) => {
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+  useFocusEffect(
+    useCallback(() => {
+      setLoading(true);
+      fetchSavedBooks();
+    }, [])
+  );
+
+
+    //  HAPUS BUKU DARI DITANDAI
+  const removeBook = async (id) => {
+    try {
+      const data = await AsyncStorage.getItem(STORAGE_KEY);
+      let ids = data ? JSON.parse(data) : [];
+
+      ids = ids.filter((x) => x !== id);
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
+
+      setBooks((prev) => prev.filter((b) => b.id !== id));
+    } catch (e) {
+      console.log("Error remove book:", e);
+    }
+  };
+
+  const confirmRemove = (id, title) => {
+    Alert.alert(
+      "Hapus Buku",
+      `Hapus "${title}" dari Judul Ditandai?`,
+      [
+        { text: "Batal", style: "cancel" },
+        { text: "Hapus", style: "destructive", onPress: () => removeBook(id) },
+      ]
     );
   };
 
-const handleDeleteSelected = async () => {
-  try {
-    for (const id of selectedIds) {
-      await fetch(`https://9dec003548aa.ngrok-free.app/api/bookmarks/${id}`, {
-        method: "DELETE",
-      });
-    }
-
-    fetchBookmarks();
-
-    setSelectedIds([]);
-    setIsDeleteMode(false);
-  } catch (error) {
-    console.error("Error deleting bookmarks:", error);
-  }
-};
-
-
-  const renderBookmark = ({ item }) => {
-    const isSelected = selectedIds.includes(item.id);
-
-    return (
+  const renderItem = ({ item }) => (
+    <View style={styles.card}>
+      {/* ICON HAPUS */}
       <TouchableOpacity
-        onPress={() => {
-          if (isDeleteMode) toggleSelect(item.id);
-        }}
-        style={[
-          styles.bookmarkItem,
-          isDeleteMode && isSelected ? styles.selectedItem : {},
-        ]}
+        style={styles.removeBtn}
+        onPress={() => confirmRemove(item.id, item.title)}
+      >
+        <Ionicons name="close-circle" size={22} color="#e53935" />
+      </TouchableOpacity>
+
+      {/* KE DETAIL */}
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={() =>
+          router.push({
+            pathname: "/DetailBuku",
+            params: { id: item.id },
+          })
+        }
       >
         <Image source={{ uri: item.cover }} style={styles.cover} />
-        <View style={styles.info}>
-          <Text style={styles.title}>{item.title}</Text>
-          <Text style={styles.author}>by {item.author}</Text>
-        </View>
-        {isDeleteMode && (
-          <Text style={[styles.checkmark, { color: isSelected ? "red" : "#ccc" }]}>
-            ✔
-          </Text>
-        )}
+
+        <Text style={styles.title} numberOfLines={2}>
+          {item.title}
+        </Text>
+
+        <Text style={styles.author} numberOfLines={1}>
+          {item.author}
+        </Text>
       </TouchableOpacity>
+    </View>
+  );
+
+  if (loading) {
+    return <Text style={{ textAlign: "center" }}>Loading...</Text>;
+  }
+
+  if (books.length === 0) {
+    return (
+      <View style={styles.empty}>
+        <Text>Belum ada buku yang ditandai</Text>
+      </View>
     );
-  };
+  }
 
   return (
-    <View style={styles.container}>
-      <View style={{ alignItems: "center", width: "100%" }}>
-        <View style={styles.countContainer}>
-          <View style={styles.countBadge}>
-            <Text style={styles.countText}>
-              {bookmarks.length} daftar judul saat ini
-            </Text>
-          </View>
-          <TouchableOpacity onPress={() => setIsDeleteMode(!isDeleteMode)}>
-            <Image source={Delete} style={{ marginLeft: 10, color: "#0F612F" }} />
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {bookmarks.length === 0 ? (
-        <View style={styles.noData}>
-          <Text>Tidak ada data</Text>
-        </View>
-      ) : (
-        <FlatList
-          data={bookmarks}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={renderBookmark}
-          contentContainerStyle={styles.list}
-          showsVerticalScrollIndicator={true}
-        />
-      )}
-
-      {isDeleteMode && selectedIds.length > 0 && (
-        <TouchableOpacity style={styles.confirmButton} onPress={handleDeleteSelected}>
-          <Text style={styles.confirmText}>✔ Hapus {selectedIds.length} Buku</Text>
-        </TouchableOpacity>
-      )}
-    </View>
+    <FlatList
+      data={books}
+      keyExtractor={(item) => item.id}
+      renderItem={renderItem}
+      numColumns={2}
+      contentContainerStyle={styles.list}
+      columnWrapperStyle={styles.row}
+      showsVerticalScrollIndicator={false}
+    />
   );
 };
 
 export default ComponentJudulDitandai;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: "100%",
-  },
-  countContainer: {
-    marginTop: 20,
-    alignItems: "center",
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "center",
-  },
-  countBadge: {
-    backgroundColor: "#0F612F",
-    height: 25,
-    width: 208,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 30,
-  },
-  countText: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 14,
-  },
-  noData: {
-    marginTop: 20,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   list: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
     paddingTop: 20,
+    paddingBottom: 100,
   },
-  bookmarkItem: {
-    flexDirection: "row",
-    backgroundColor: "#fff",
-    padding: 10,
-    borderRadius: 10,
-    marginBottom: 10,
-    alignItems: "center",
+  row: {
+    justifyContent: "space-between",
+    marginBottom: 20,
   },
-  selectedItem: {
-    borderColor: "red",
-    borderWidth: 2,
+  card: {
+    width: "48%",
   },
   cover: {
-    width: 80,
-    height: 100,
-    borderRadius: 8,
-    marginRight: 10,
+    width: "100%",
+    aspectRatio: 2 / 3,
+    borderRadius: 14,
+    backgroundColor: "#e0e0e0",
   },
-  info: {
-    flex: 1,
+  removeBtn: {
+    position: "absolute",
+    top: -8,
+    right: -8,
+    zIndex: 10,
   },
   title: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 4,
+    marginTop: 8,
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#222",
   },
   author: {
-    fontSize: 14,
+    fontSize: 12,
     color: "#666",
+    marginTop: 2,
   },
-  checkmark: {
-    fontSize: 24,
-    marginLeft: 10,
-  },
-  confirmButton: {
-    backgroundColor: "green",
-    padding: 10,
-    borderRadius: 30,
+  empty: {
+    marginTop: 60,
     alignItems: "center",
-    margin: 20,
-  },
-  confirmText: {
-    color: "white",
-    fontWeight: "bold",
   },
 });

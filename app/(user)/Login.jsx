@@ -10,217 +10,220 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-
 } from "react-native";
+
 import tanjung from "../../assets/images/tanjung.png";
+import { API } from "../../utils/api";
 
 const Login = () => {
   const router = useRouter();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
+    if (!username || !password) {
+      Alert.alert("Error", "NIK dan Password wajib diisi");
+      return;
+    }
+
+    setLoading(true);
+
     try {
-      console.log(
-        "Attempting login with NIK:",
-        username,
-        "Password:",
-        password
-      );
-      const response = await fetch(
-        "https://9dec003548aa.ngrok-free.app/auth/login/",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password }),
-        }
-      );
+      console.log("LOGIN URL:", API.login);
 
-      console.log("Response status:", response.status);
+      const response = await fetch(API.login, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      });
+
       const data = await response.json();
-      console.log("Response data:", data);
+      console.log("LOGIN RESPONSE:", data);
 
-      if (response.ok) {
-        const token = data.access_token || data.token;
-        if (token) {
-          await AsyncStorage.setItem("token", token);
-          await AsyncStorage.setItem("username", username);
+      if (!response.ok) {
+        Alert.alert("Error", data.message || "Login gagal");
+        return;
+      }
 
-          try {
-            const memberResponse = await fetch(
-              "https://9dec003548aa.ngrok-free.app/auth/users/",
-              {
-                method: "GET",
-                headers: {
-                  Authorization: `Token ${token}`,
-                  "Content-Type": "application/json",
-                },
-              }
-            );
+      const token = data.access_token || data.token;
+      if (!token) {
+        Alert.alert("Error", "Token tidak ditemukan");
+        return;
+      }
 
-            console.log("Member API response status:", memberResponse.status);
-            const memberData = await memberResponse.json();
-            console.log("Member API response JSON:", memberData);
+      // SIMPAN SESSION
+      await AsyncStorage.multiSet([
+        ["token", token],
+        ["username", username],
+      ]);
 
-            const currentUser = memberData.find(
-              (m) => String(m.username) === String(username)
-            );
+      // AMBIL DATA USER
+      try {
+        const userRes = await fetch(API.users, {
+          method: "GET",
+          headers: {
+            Authorization: `Token ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
 
-            if (currentUser?.realname) {
-              await AsyncStorage.setItem("realname", currentUser.realname);
-              console.log("Stored realname:", currentUser.realname);
-            } else {
-              console.warn("Nama user tidak ditemukan dalam response");
-            }
-          } catch (error) {
-            console.log("Error fetching member data:", error);
+        if (userRes.ok) {
+          const users = await userRes.json();
+          const currentUser = users.find(
+            (u) => String(u.username) === String(username)
+          );
+
+          if (currentUser?.realname) {
+            await AsyncStorage.setItem("realname", currentUser.realname);
           }
         }
-
-        Alert.alert("Success", "Login successful");
-        router.push("/page/HomePage");
-      } else {
-        Alert.alert("Error", data.message || "Login failed");
+      } catch (err) {
+        console.log("Fetch user error:", err);
       }
+
+      Alert.alert("Success", "Login berhasil");
+      router.replace("/(page)/HomePage");
     } catch (error) {
-      console.log("Network error:", error);
-      Alert.alert("Error", "Network error");
+      console.log("NETWORK ERROR:", error);
+      Alert.alert("Error", "Koneksi ke server gagal");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <View style={style.containerContent}>
-      <View style={{ justifyContent: "flex-start", width: "100%" }}>
-        <View style={style.titleContainer}>
-          <ImageBackground
-            style={style.ImageBackground}
-            source={tanjung}
-            resizeMode="cover"
-          ></ImageBackground>
-          <Text style={style.title}>Welcome</Text>
-          <Text style={{ marginLeft: 20, color: "#ffffffff", fontSize: 16 }}>
-           Sign your account
-          </Text>
-        </View>
+    <View style={styles.container}>
+      {/* HEADER */}
+      <View style={styles.header}>
+        <ImageBackground source={tanjung} style={styles.bg} />
+        <Text style={styles.title}>Welcome</Text>
+        <Text style={styles.subtitle}>Sign your account</Text>
       </View>
 
-      <View style={{ flex: 1, gap: 10 }}>
-        <View style={{ marginTop: 90 }}>
-          <Text style={{ fontSize: 15, color: "#0F612F", right: -20 }}>
-            NIK
-          </Text>
+      {/* FORM */}
+      <View style={styles.form}>
+        <Text style={styles.label}>NIK</Text>
+        <TextInput
+          placeholder="Masukkan NIK"
+          value={username}
+          onChangeText={setUsername}
+          style={styles.input}
+        />
+
+        <Text style={styles.label}>Password</Text>
+        <View style={{ position: "relative" }}>
           <TextInput
-            placeholder="Masukkan NIK"
-            value={username}
-            onChangeText={setUsername}
-            style={style.textInput}
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!showPassword}
+            style={styles.input}
           />
-        </View>
-
-        <View>
-          <Text style={{ fontSize: 15, color: "#0F612F", right: -20 }}>
-            Password
-          </Text>
-          <View style={{ position: "relative" }}>
-            <TextInput
-              placeholder="Password"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={!showPassword}
-              style={style.textInput}
-            />
-            <TouchableOpacity
-              onPress={() => setShowPassword(!showPassword)}
-              style={style.icons}
-            >
-              <Ionicons
-                name={showPassword ? "eye-outline" : "eye-off-outline"}
-                size={24}
-                color="#0F612F"
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={{ alignItems: "flex-end" }}>
           <TouchableOpacity
-            onPress={() => router.push("/user/LupaSandiScreen")}
+            style={styles.eye}
+            onPress={() => setShowPassword(!showPassword)}
           >
-            <Text style={{ color: "#0F612F" }}>Lupa Password?</Text>
+            <Ionicons
+              name={showPassword ? "eye-outline" : "eye-off-outline"}
+              size={24}
+              color="#0F612F"
+            />
           </TouchableOpacity>
         </View>
 
-        <View style={{ alignItems: "center" }}>
-          <TouchableOpacity style={style.button} onPress={handleLogin}>
-            <Text
-              style={{ color: "#f0f0f0", fontSize: 20, fontWeight: "bold" }}
-            >
-              Sign In
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          onPress={() => router.push("/user/LupaSandiScreen")}
+          style={{ alignSelf: "flex-end", marginBottom: 20 }}
+        >
+          <Text style={{ color: "#0F612F" }}>Lupa Password?</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleLogin}
+          disabled={loading}
+        >
+          <Text style={styles.buttonText}>
+            {loading ? "Loading..." : "Sign In"}
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
 };
 
 export default Login;
-
-const style = StyleSheet.create({
-  containerContent: {
+const styles = StyleSheet.create({
+  container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fffffff0",
+    backgroundColor: "#fff",
   },
-  titleContainer: {
+  header: {
     backgroundColor: "#0F612F",
-    height: 328,
-    width: "100%",
-    borderBottomRightRadius: 100,
+    height: 320,
     justifyContent: "center",
-    elevation: 10,
+    borderBottomRightRadius: 100,
     overflow: "hidden",
   },
+  bg: {
+    position: "absolute",
+    width: 460,
+    height: 280,
+    top: -10,
+    left: 190,
+    opacity: 0.7,
+  },
   title: {
-    color: "#ffffffff",
+    color: "#fff",
     fontSize: 40,
     fontWeight: "bold",
     marginLeft: 20,
   },
-  textInput: {
+  subtitle: {
+    color: "#fff",
+    fontSize: 16,
+    marginLeft: 20,
+  },
+  form: {
+    padding: 20,
+    marginTop: 40,
+  },
+  label: {
+    color: "#0F612F",
+    marginBottom: 6,
+  },
+  input: {
     height: 56,
-    width: 330,
     borderWidth: 1,
+    borderColor: "#0F612F",
     borderRadius: 10,
     paddingHorizontal: 15,
     fontSize: 16,
-    borderColor: "#0F612F",
-    placeholderTextColor: "#0F612F",
+    marginBottom: 16,
+  },
+  eye: {
+    position: "absolute",
+    right: 15,
+    top: 16,
   },
   button: {
     backgroundColor: "#0F612F",
     paddingVertical: 14,
     borderRadius: 30,
     alignItems: "center",
-    marginTop: 20,
     elevation: 3,
-    width: 200,
   },
-  icons: {
-    position: "absolute",
-    right: 30,
-    top: 15,
-  },
-  ImageBackground: {
-    width: "460",
-    height: "280",
-    position: "absolute",
-    top: -10,
-    left: 190,
-    color: "#ffffff",
-    justifyContent: "center",
-    alignItems: "flex-start",
-    opacity: 0.7,
+  buttonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });

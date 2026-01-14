@@ -9,7 +9,7 @@ export function useAuth() {
     const checkAuth = async () => {
       try {
         const token = await AsyncStorage.getItem('token');
-        setIsSignedIn(!!token); // true jika token ada, false jika null/undefined
+        setIsSignedIn(!!token); 
       } catch (e) {
         console.error("Gagal memuat token:", e);
         setIsSignedIn(false);
@@ -20,7 +20,6 @@ export function useAuth() {
     checkAuth();
   }, []);
 
-  // Fungsi placeholder untuk login/logout
   const signIn = async (token) => {
     await AsyncStorage.setItem('token', token);
     setIsSignedIn(true);

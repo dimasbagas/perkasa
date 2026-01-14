@@ -1,8 +1,15 @@
-import { useState } from "react";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
-import BukuFavorit from "../../components/HomeScreen/BukuFavorit";
-import CariBuku from "../../components/HomeScreen/CariBuku";
+import {
+  SafeAreaView,
+  Text,
+  View,
+  FlatList,
+  StyleSheet,
+} from "react-native";
+
+import RekomendasiBuku from "../../components/HomeScreen/RekomendasiBuku";
+import Search from "../../components/HomeScreen/Search";
 import KategoriTema from "../../components/tema/KategoriTema";
+import BukuPopuler from "../../components/HomeScreen/BukuPopuler";
 
 const HomePage = () => {
   const dataKategori = [
@@ -13,64 +20,52 @@ const HomePage = () => {
     { id: "hukum", name: "Hukum" },
   ];
 
-  const [selected, setSelected] = useState("matematika");
-
   return (
-    <SafeAreaView style={style.containerContent}>
-      <CariBuku />
-      <View style={{ paddingVertical: 20 }}>
-        <KategoriTema
-          data={dataKategori}
-          selected={selected}
-          onSelect={(id) => setSelected(id)}
-        />
-      </View>
+    <SafeAreaView style={styles.container}>
+      <FlatList
+        data={[{ key: "content" }]}
+        keyExtractor={(item) => item.key}
+        showsVerticalScrollIndicator={false}
+        renderItem={() => (
+          <>
+            <Search />
 
-      <View
-        style={{ alignItems: "flex-start", width: "100%", paddingLeft: 20 }}
-      >
-        <Text style={{ fontSize: 24, fontWeight: "600", color: "#305763" }}>
-          Buku favorit
-        </Text>
-      </View>
+            <View style={{ paddingVertical: 16 }}>
+              <KategoriTema data={dataKategori} />
+            </View>
 
-      <BukuFavorit />
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Rekomendasi Buku</Text>
+              <RekomendasiBuku />
+            </View>
 
-      <View
-        style={{ alignItems: "flex-start", width: "100%", paddingLeft: 20 }}
-      >
-        <Text style={{ fontSize: 24, fontWeight: "600", color: "#305763" }}>
-          Novel
-        </Text>
-      </View>
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Buku Populer</Text>
+              <BukuPopuler />
+            </View>
+          </>
+        )}
+      />
     </SafeAreaView>
   );
 };
 
 export default HomePage;
 
-const style = StyleSheet.create({
-  containerContent: {
+const styles = StyleSheet.create({
+  container: {
     flex: 1,
-    alignItems: "center",
     backgroundColor: "#f0f0f0f0",
-    marginTop: 50,
+    paddingTop: 40,
   },
-  titleContainer: {
-    backgroundColor: "#0F612F",
-    width: "100%",
-    borderBottomRightRadius: 100,
-    justifyContent: "flex-end",
-    elevation: 10,
-    height: 230,
-    paddingBottom: 20,
+  section: {
+    marginTop: 20,
+  },
+  sectionTitle: {
+    fontSize: 22,
+    fontWeight: "600",
+    color: "#305763",
     paddingLeft: 20,
-    paddingRight: 50,
-    position: "relative",
-  },
-  title: {
-    color: "#344175",
-    fontSize: 30,
-    fontWeight: "bold",
+    marginBottom: 10,
   },
 });

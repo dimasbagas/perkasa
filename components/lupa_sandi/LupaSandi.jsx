@@ -52,7 +52,6 @@ const LupaSandiScreen = () => {
         return;
       }
 
-      // Simpan data untuk step OTP & reset
       await AsyncStorage.setItem("resetEmail", email);
       await AsyncStorage.setItem("newPassword", password);
 
@@ -124,7 +123,6 @@ const LupaSandiScreen = () => {
         </TouchableOpacity>
       </View>
 
-      {/* ORNAMEN BAWAH */}
       <Image
         source={require("../../assets/images/tanjung2.png")}
         style={styles.ornamentBottom}

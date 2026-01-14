@@ -22,50 +22,52 @@ const TabBar = ({ state, navigation }) => {
 
   return (
     <View style={styles.container}>
-      {state.routes.map((route, index) => {
-        const isFocused = state.index === index;
+      {state.routes
+        .filter(route => icons[route.name] && labels[route.name])
+        .map((route, index) => {
+          const isFocused = state.index === index;
 
-        const onPress = () => {
-          const event = navigation.emit({
-            type: 'tabPress',
-            target: route.key,
-            canPreventDefault: true,
-          });
+          const onPress = () => {
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: route.key,
+              canPreventDefault: true,
+            });
 
-          if (!isFocused && !event.defaultPrevented) {
-            navigation.navigate(route.name);
-          }
-        };
+            if (!isFocused && !event.defaultPrevented) {
+              navigation.navigate(route.name);
+            }
+          };
 
-        return (
-          <TouchableOpacity
-            key={route.key}
-            style={styles.tabItem}
-            onPress={onPress}
-            activeOpacity={0.7}
-          >
-            <Image
-              source={icons[route.name]}
-              style={{
-                width: 40,
-                height: 40,
-                tintColor: isFocused ? activeColor : inactiveColor,
-              }}
-            />
-
-            <Text
-              style={{
-                marginTop: 4,
-                fontSize: 12,
-                fontWeight: isFocused ? '600' : '400',
-                color: isFocused ? activeColor : inactiveColor,
-              }}
+          return (
+            <TouchableOpacity
+              key={route.key}
+              style={styles.tabItem}
+              onPress={onPress}
+              activeOpacity={0.75}
             >
-              {labels[route.name]}
-            </Text>
-          </TouchableOpacity>
-        );
-      })}
+              <Image
+                source={icons[route.name]}
+                style={[
+                  styles.icon,
+                  { tintColor: isFocused ? activeColor : inactiveColor },
+                ]}
+              />
+
+              <Text
+                style={[
+                  styles.label,
+                  {
+                    color: isFocused ? activeColor : inactiveColor,
+                    fontWeight: isFocused ? '600' : '400',
+                  },
+                ]}
+              >
+                {labels[route.name]}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
     </View>
   );
 };
@@ -76,11 +78,17 @@ const styles = StyleSheet.create({
     bottom: 25,
     left: 20,
     right: 20,
+
     flexDirection: 'row',
+    justifyContent: 'space-around', 
+    alignItems: 'center',
+
     backgroundColor: '#70A284',
     paddingVertical: 12,
     borderRadius: 28,
     borderCurve: 'continuous',
+    
+
     shadowColor: '#000',
     shadowOpacity: 0.15,
     shadowOffset: { width: 0, height: 5 },
@@ -89,9 +97,18 @@ const styles = StyleSheet.create({
   },
 
   tabItem: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+
+  icon: {
+    width: 36,
+    height: 36,
+  },
+
+  label: {
+    marginTop: 4,
+    fontSize: 12,
   },
 });
 

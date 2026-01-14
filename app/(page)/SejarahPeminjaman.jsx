@@ -17,7 +17,6 @@ const PinjamanTerkini = () => {
         </View>
       </View>
 
-      {/* Bawah */}
       <ComponentSejarahPeminjaman />
     </View>
   );

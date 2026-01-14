@@ -1,8 +1,19 @@
 import { useEffect, useState } from "react";
-import { Image, Text, TouchableOpacity, View, StyleSheet } from "react-native";
-import { getCurrentUser } from "../utils/getCurrentUser";
+import {
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+  StyleSheet,
+  Alert,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
+import { getCurrentUser } from "../../utils/getCurrentUser";
 
 const ComponentAkunSaya = () => {
+  const router = useRouter();
+
   const [membership, setMembership] = useState({});
   const [loading, setLoading] = useState(true);
 
@@ -13,12 +24,17 @@ const ComponentAkunSaya = () => {
   const fetchMembership = async () => {
     try {
       const user = await getCurrentUser();
-      if (!user) return setLoading(false);
+      if (!user) {
+        setLoading(false);
+        return;
+      }
 
       const response = await fetch(
-        "https://9dec003548aa.ngrok-free.app/user/members/",
+        "http://opac.pamekasankab.go.id:8000/user/members/",
         {
-          headers: { Authorization: `Token ${user.token}` },
+          headers: {
+            Authorization: `Token ${user.token}`,
+          },
         }
       );
 
@@ -43,21 +59,55 @@ const ComponentAkunSaya = () => {
         }
       }
     } catch (err) {
-      console.log("Error fetching membership", err);
+      console.log("Error fetching membership:", err);
     } finally {
       setLoading(false);
     }
   };
 
+
+  // LOGOUT
+  const handleLogout = () => {
+    Alert.alert(
+      "Logout",
+      "Apakah kamu yakin ingin logout?",
+      [
+        { text: "Batal", style: "cancel" },
+        {
+          text: "Logout",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await AsyncStorage.multiRemove([
+                "token",
+                "refresh_token",
+                "username",
+                "user_id",
+                "user_type",
+                "realname",
+              ]);
+
+              router.replace("/Login");
+            } catch (err) {
+              Alert.alert("Error", "Gagal logout");
+              console.log("Logout error:", err);
+            }
+          },
+        },
+      ]
+    );
+  };
+
   return (
     <View style={styles.container}>
-      
+      {/* NAMA */}
       <View style={styles.cardName}>
         <Text style={styles.nameText}>
           {membership.namaAnggota || "-"}
         </Text>
       </View>
 
+      {/* DETAIL */}
       <View style={styles.cardDetail}>
         {loading ? (
           <Text>Memuat data...</Text>
@@ -67,21 +117,27 @@ const ComponentAkunSaya = () => {
             <Row title="ID Anggota" value={membership.idAnggota} />
             <Row title="Surel Anggota" value={membership.surel} />
             <Row title="Tipe Keanggotaan" value={membership.tipeKeanggotaan} />
-            <Row title="Tanggal Registrasi" value={membership.tanggalRegistrasi} />
-            <Row title="Berlaku hingga" value={membership.berlakuHingga} />
+            <Row
+              title="Tanggal Registrasi"
+              value={membership.tanggalRegistrasi}
+            />
+            <Row
+              title="Berlaku Hingga"
+              value={membership.berlakuHingga}
+            />
             <Row title="Institusi" value={membership.institusi} />
           </>
         )}
       </View>
 
-      <TouchableOpacity style={styles.btn}>
+      {/* LOGOUT */}
+      <TouchableOpacity style={styles.btn} onPress={handleLogout}>
         <Image
           source={require("../../assets/icons/Time.png")}
           style={styles.btnIcon}
         />
         <Text style={styles.btnText}>Logout</Text>
       </TouchableOpacity>
-
     </View>
   );
 };
@@ -100,6 +156,7 @@ const styles = StyleSheet.create({
     width: "90%",
     marginTop: 90,
     marginBottom: 20,
+    alignSelf: "center",
   },
 
   cardName: {
@@ -112,7 +169,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowRadius: 7,
     elevation: 4,
-    margin: 15,
+    marginBottom: 15,
   },
 
   nameText: {
@@ -122,7 +179,6 @@ const styles = StyleSheet.create({
   },
 
   cardDetail: {
-    marginTop: 20,
     backgroundColor: "#EDE9FF",
     padding: 20,
     borderRadius: 18,
@@ -130,7 +186,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     elevation: 4,
     gap: 10,
-    margin: 15,
+    marginBottom: 15,
   },
 
   row: {
@@ -150,7 +206,6 @@ const styles = StyleSheet.create({
   btn: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 15,
     backgroundColor: "#EDE9FF",
     padding: 15,
     borderRadius: 18,
@@ -158,7 +213,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     elevation: 4,
     justifyContent: "center",
-    margin: 15,
   },
 
   btnIcon: {
