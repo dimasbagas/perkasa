@@ -1,5 +1,11 @@
-import { StyleSheet, Text, View, FlatList } from "react-native";
-import React, { useState, useEffect } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  Image,
+} from "react-native";
+import React, { useState, useEffect } from "react";
 
 const ComponentSejarahPeminjaman = () => {
   const [history, setHistory] = useState([]);
@@ -10,39 +16,68 @@ const ComponentSejarahPeminjaman = () => {
 
   const fetchHistory = async () => {
     try {
-      const response = await fetch('http://opac.pamekasankab.go.id:8000/api/biblio/');
+      const response = await fetch(
+        "http://opac.pamekasankab.go.id:8000/api/biblio/"
+      );
       const data = await response.json();
       setHistory(data);
     } catch (error) {
-      console.error('Error fetching loan history:', error);
+      console.error("Error fetching history:", error);
       setHistory([]);
     }
   };
 
+  /* =========================
+     RENDER ITEM
+     ========================= */
   const renderHistoryItem = ({ item }) => (
-    <View style={styles.historyItem}>
-      <Text style={styles.historyText}>Judul: {item.title}</Text>
-      <Text style={styles.historyText}>ISBN/ISSN: {item.isbn_issn}</Text>
-      <Text style={styles.historyText}>Tahun Terbit: {item.publish_year}</Text>
-      <Text style={styles.historyText}>Jumlah Halaman: {item.collation}</Text>
-      <Text style={styles.historyText}>Catatan: {item.notes}</Text>
+    <View style={styles.card}>
+      {/* COVER */}
+      <Image
+        source={{
+          uri:
+            item.image ||
+            "https://via.placeholder.com/60x90?text=No+Cover",
+        }}
+        style={styles.cover}
+      />
+
+      {/* INFO */}
+      <View style={styles.info}>
+        <Text style={styles.title} numberOfLines={2}>
+          {item.title}
+        </Text>
+
+        <Text style={styles.text}>
+          ISBN/ISSN: {item.isbn_issn || "-"}
+        </Text>
+
+        <Text style={styles.text}>
+          Tahun Terbit: {item.publish_year || "-"}
+        </Text>
+
+        <Text style={styles.note} numberOfLines={2}>
+          {item.notes || "Tidak ada catatan"}
+        </Text>
+      </View>
     </View>
   );
 
   return (
     <View style={styles.container}>
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>Sejarah Peminjaman</Text>
+      {/* JUDUL */}
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Sejarah Peminjaman</Text>
+        <Text style={styles.count}>{history.length} buku</Text>
       </View>
-      <View style={styles.countContainer}>
-        <Text>{history.length} buku ditemukan</Text>
-      </View>
+
+      {/* LIST */}
       <FlatList
         data={history}
         keyExtractor={(item, index) => index.toString()}
         renderItem={renderHistoryItem}
         contentContainerStyle={styles.list}
-        showsVerticalScrollIndicator={true}
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );
@@ -50,40 +85,65 @@ const ComponentSejarahPeminjaman = () => {
 
 export default ComponentSejarahPeminjaman;
 
+/* =========================
+   STYLE
+   ========================= */
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: '100%',
-  },
-  titleContainer: {
-    marginTop: 20,
-    alignItems: "flex-start",
     width: "100%",
-    paddingLeft: 20,
+    paddingHorizontal: 16,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#0F612F",
-  },
-  countContainer: {
+  header: {
     marginTop: 20,
-    alignItems: "flex-start",
-    width: "100%",
-    paddingLeft: 20,
-  },
-  list: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
-  },
-  historyItem: {
-    backgroundColor: "#fff",
-    padding: 10,
-    borderRadius: 10,
     marginBottom: 10,
   },
-  historyText: {
-    fontSize: 16,
+  headerTitle: {
+    fontSize: 22,
+    fontWeight: "700",
+    color: "#16994aff",
+  },
+  count: {
+    fontSize: 12,
+    color: "#666",
+    marginTop: 4,
+  },
+  list: {
+    paddingTop: 12,
+    paddingBottom: 100,
+  },
+  card: {
+    flexDirection: "row",
+    backgroundColor: "#dbf5ddff",
+    padding: 12,
+    borderRadius: 14,
+    marginBottom: 14,
+  },
+  cover: {
+    width: 60,
+    height: 90,
+    borderRadius: 8,
+    marginRight: 12,
+    backgroundColor: "#ddd",
+  },
+  info: {
+    flex: 1,
+    justifyContent: "space-between",
+  },
+  title: {
+    fontSize: 14,
+    fontWeight: "700",
     marginBottom: 4,
+  },
+  text: {
+    fontSize: 12,
+    color: "#444",
+    marginBottom: 2,
+  },
+  note: {
+    fontSize: 11,
+    color: "#666",
+    marginTop: 6,
+    fontStyle: "italic",
   },
 });

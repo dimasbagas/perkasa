@@ -32,7 +32,7 @@ const style = StyleSheet.create({
   },
 
   titleContainer: {
-    backgroundColor: "#0F612F",
+    backgroundColor: "#16994aff",
     width: "100%",
     borderBottomRightRadius: 100,
     elevation: 10,

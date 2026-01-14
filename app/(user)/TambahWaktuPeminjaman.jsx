@@ -89,7 +89,7 @@ const TambahWaktuPeminjaman = () => {
               <Ionicons
                 name="chevron-forward"
                 size={18}
-                color={active ? "#fff" : "#0F612F"}
+                color={active ? "#fff" : "#16994aff"}
               />
             </TouchableOpacity>
           );
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
 
   /* HEADER */
   header: {
-    backgroundColor: "#0F612F",
+    backgroundColor: "#16994aff",
     height: 160,
     borderBottomRightRadius: 100,
     paddingTop: 50,
@@ -139,18 +139,18 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     borderWidth: 1.5,
-    borderColor: "#0F612F",
+    borderColor: "#16994aff",
     paddingVertical: 14,
     paddingHorizontal: 16,
     borderRadius: 14,
     marginBottom: 12,
   },
   optionActive: {
-    backgroundColor: "#0F612F",
+    backgroundColor: "#16994aff",
   },
   optionText: {
     fontSize: 16,
-    color: "#0F612F",
+    color: "#16994aff",
     fontWeight: "500",
   },
   optionTextActive: {
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginTop: "auto",
     marginBottom: 30,
-    backgroundColor: "#0F612F",
+    backgroundColor: "#16994aff",
     paddingVertical: 14,
     borderRadius: 14,
     alignItems: "center",

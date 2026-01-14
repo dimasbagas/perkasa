@@ -130,7 +130,7 @@ const style = StyleSheet.create({
   },
   loanItem: {
     flexDirection: "row",
-    backgroundColor: "#CFF5DD",
+    backgroundColor: "#dbf5ddff",
     padding: 12,
     marginBottom: 14,
     borderRadius: 14,
@@ -158,7 +158,7 @@ const style = StyleSheet.create({
   extendBtn: {
     alignSelf: "flex-end",
     marginTop: 8,
-    backgroundColor: "#0F612F",
+    backgroundColor: "#16994aff",
     paddingHorizontal: 14,
     paddingVertical: 6,
     borderRadius: 10,

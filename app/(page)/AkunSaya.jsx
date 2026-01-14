@@ -13,7 +13,15 @@ const AkunSaya = () => {
           resizeMode="cover"
         />
       </View>
+{/* 
+      <View style={styles.profileCircle}>
+        <Image
+          source={require("../../assets/icons/Account.png")}
+          style={{ width: 80, height: 80, tintColor: "#A5A5A5" }}
+        />
+      </View> */}
       <ComponentAkunSaya />
+
     </View>
   );
 };
@@ -30,7 +38,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     width: "100%",
     height: 230,
-    backgroundColor: "#01931aff",
+    backgroundColor: "#16994aff",
     borderBottomLeftRadius: 120,
     borderBottomRightRadius: 120,
     overflow: "hidden",

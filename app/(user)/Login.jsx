@@ -10,6 +10,9 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from "react-native";
 
 import tanjung from "../../assets/images/tanjung.png";
@@ -100,130 +103,153 @@ const Login = () => {
   };
 
   return (
-    <View style={styles.container}>
-      {/* HEADER */}
-      <View style={styles.header}>
-        <ImageBackground source={tanjung} style={styles.bg} />
-        <Text style={styles.title}>Welcome</Text>
-        <Text style={styles.subtitle}>Sign your account</Text>
-      </View>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={style.containerContent}>
+          {/* ===== HEADER ===== */}
+          <View style={{ width: "100%" }}>
+            <View style={style.titleContainer}>
+              <ImageBackground
+                style={style.ImageBackground}
+                source={tanjung}
+                resizeMode="cover"
+              />
+              <Text style={style.title}>Welcome</Text>
+              <Text style={style.subtitle}>Sign your account</Text>
+            </View>
+          </View>
 
-      {/* FORM */}
-      <View style={styles.form}>
-        <Text style={styles.label}>NIK</Text>
-        <TextInput
-          placeholder="Masukkan NIK"
-          value={username}
-          onChangeText={setUsername}
-          style={styles.input}
-        />
+          {/* ===== FORM ===== */}
+          <View style={style.formContainer}>
+            <View>
+              <Text style={style.label}>NIK</Text>
+              <TextInput
+                placeholder="Masukkan NIK"
+                value={username}
+                onChangeText={setUsername}
+                style={style.textInput}
+              />
+            </View>
 
-        <Text style={styles.label}>Password</Text>
-        <View style={{ position: "relative" }}>
-          <TextInput
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry={!showPassword}
-            style={styles.input}
-          />
-          <TouchableOpacity
-            style={styles.eye}
-            onPress={() => setShowPassword(!showPassword)}
-          >
-            <Ionicons
-              name={showPassword ? "eye-outline" : "eye-off-outline"}
-              size={24}
-              color="#0F612F"
-            />
-          </TouchableOpacity>
+            <View>
+              <Text style={style.label}>Password</Text>
+              <View style={{ position: "relative" }}>
+                <TextInput
+                  placeholder="Password"
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry={!showPassword}
+                  style={style.textInput}
+                />
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showPassword)}
+                  style={style.icons}
+                >
+                  <Ionicons
+                    name={showPassword ? "eye-outline" : "eye-off-outline"}
+                    size={24}
+                    color="#0F612F"
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <View style={{ alignItems: "flex-end" }}>
+              <TouchableOpacity
+                onPress={() => router.push("/user/LupaSandiScreen")}
+              >
+                <Text style={{ color: "#0F612F" }}>Lupa Password?</Text>
+              </TouchableOpacity>
+            </View>
+
+            <TouchableOpacity style={style.button} onPress={handleLogin}>
+              <Text style={style.buttonText}>Sign In</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-
-        <TouchableOpacity
-          onPress={() => router.push("/user/LupaSandiScreen")}
-          style={{ alignSelf: "flex-end", marginBottom: 20 }}
-        >
-          <Text style={{ color: "#0F612F" }}>Lupa Password?</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleLogin}
-          disabled={loading}
-        >
-          <Text style={styles.buttonText}>
-            {loading ? "Loading..." : "Sign In"}
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
 export default Login;
-const styles = StyleSheet.create({
-  container: {
+
+const style = StyleSheet.create({
+  containerContent: {
     flex: 1,
-    backgroundColor: "#fff",
+    alignItems: "center",
+    backgroundColor: "#fffffff0",
   },
-  header: {
-    backgroundColor: "#0F612F",
+  titleContainer: {
+    backgroundColor: "#01931aff",
     height: 320,
-    justifyContent: "center",
+    width: "100%",
     borderBottomRightRadius: 100,
+    justifyContent: "center",
+    paddingLeft: 20,
     overflow: "hidden",
-  },
-  bg: {
-    position: "absolute",
-    width: 460,
-    height: 280,
-    top: -10,
-    left: 190,
-    opacity: 0.7,
   },
   title: {
     color: "#fff",
     fontSize: 40,
     fontWeight: "bold",
-    marginLeft: 20,
   },
   subtitle: {
     color: "#fff",
     fontSize: 16,
-    marginLeft: 20,
+    marginTop: 4,
   },
-  form: {
-    padding: 20,
+  formContainer: {
     marginTop: 40,
+    gap: 16,
+    alignItems: "center",
   },
   label: {
+    fontSize: 15,
     color: "#0F612F",
-    marginBottom: 6,
+    marginBottom: 4,
+    marginLeft: 5,
   },
-  input: {
+  textInput: {
     height: 56,
+    width: 330,
     borderWidth: 1,
-    borderColor: "#0F612F",
     borderRadius: 10,
     paddingHorizontal: 15,
     fontSize: 16,
-    marginBottom: 16,
-  },
-  eye: {
-    position: "absolute",
-    right: 15,
-    top: 16,
+    borderColor: "#01931aff",
   },
   button: {
-    backgroundColor: "#0F612F",
+    backgroundColor: "#01931aff",
     paddingVertical: 14,
     borderRadius: 30,
     alignItems: "center",
+    marginTop: 20,
     elevation: 3,
+    width: 200,
   },
   buttonText: {
-    color: "#fff",
-    fontSize: 18,
+    color: "#f0f0f0",
+    fontSize: 20,
     fontWeight: "bold",
+  },
+  icons: {
+    position: "absolute",
+    right: 20,
+    top: 16,
+  },
+  ImageBackground: {
+    width: 260,
+    height: 260,
+    position: "absolute",
+    right: -40,
+    top: -20,
+    opacity: 0.7,
   },
 });

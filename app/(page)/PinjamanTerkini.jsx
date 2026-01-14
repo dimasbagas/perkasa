@@ -30,7 +30,7 @@ const style = StyleSheet.create({
     backgroundColor: "#f0f0f0f0",
   },
   titleContainer: {
-    backgroundColor: "#0F612F",
+    backgroundColor: "#16994aff",
     width: "100%",
     borderBottomRightRadius: 100,
     justifyContent: "flex-end",

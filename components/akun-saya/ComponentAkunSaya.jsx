@@ -160,11 +160,11 @@ const styles = StyleSheet.create({
   },
 
   cardName: {
-    backgroundColor: "#EDE9FF",
+    backgroundColor: "#dbf5ddff",
     padding: 15,
     borderRadius: 18,
     alignItems: "center",
-    shadowColor: "#000",
+    shadowColor: "#158344ff",
     shadowOpacity: 0.15,
     shadowOffset: { width: 0, height: 4 },
     shadowRadius: 7,
@@ -179,10 +179,10 @@ const styles = StyleSheet.create({
   },
 
   cardDetail: {
-    backgroundColor: "#EDE9FF",
+    backgroundColor: "#dbf5ddff",
     padding: 20,
     borderRadius: 18,
-    shadowColor: "#000",
+    shadowColor: "#158344ff",
     shadowOpacity: 0.15,
     elevation: 4,
     gap: 10,
@@ -206,10 +206,10 @@ const styles = StyleSheet.create({
   btn: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#EDE9FF",
+    backgroundColor: "#fe6464",
     padding: 15,
     borderRadius: 18,
-    shadowColor: "#000",
+    shadowColor: "#158344ff",
     shadowOpacity: 0.15,
     elevation: 4,
     justifyContent: "center",
@@ -219,11 +219,13 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     marginRight: 10,
-    tintColor: "#555",
+    tintColor: "#ffffffff",
+    
   },
 
   btnText: {
     fontSize: 16,
     fontWeight: "600",
+    color: "#ffffffff",
   },
 });

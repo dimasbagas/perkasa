@@ -95,12 +95,12 @@ const styles = StyleSheet.create({
   input: {
     width: "100%",
     height: 49,
-    borderColor: "#ccc",
+    borderColor: "#16994aff",
     borderWidth: 1,
     marginBottom: 12,
     paddingHorizontal: 16,
     borderRadius: 25,
-    backgroundColor: "#fafafa",
+    backgroundColor: "#16994aff",
   },
   list: {
     flex: 1,

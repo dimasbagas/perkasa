@@ -17,35 +17,34 @@ const PinjamanTerkini = () => {
             source={tanjung}
             resizeMode="cover"
             style={{
-              width: "460",
-              height: "280",
+              width: 460,
+              height: 280,
               position: "absolute",
               top: -60,
               left: 170,
-              color: "#ffffff",
-              justifyContent: "center",
-              alignItems: "flex-start",
               opacity: 0.7,
             }}
           />
           <Text style={style.title}>Buku Ditandai</Text>
         </View>
       </View>
+
       {/* Bawah */}
       <ComponentJudulDitandai />
     </SafeAreaView>
   );
 };
+
 export default PinjamanTerkini;
 
 const style = StyleSheet.create({
   containerContent: {
     flex: 1,
-    alignItems: "center",
     backgroundColor: "#fffffff0",
+    // alignItems: "center", ❌ HAPUS
   },
   titleContainer: {
-    backgroundColor: "#0F612F",
+    backgroundColor: "#16994aff",
     width: "100%",
     borderBottomRightRadius: 100,
     justifyContent: "flex-end",
@@ -58,9 +57,8 @@ const style = StyleSheet.create({
     overflow: "hidden",
   },
   title: {
-    color: "#ffffffff",
+    color: "#ffffff",
     fontSize: 30,
     fontWeight: "bold",
-
   },
 });
