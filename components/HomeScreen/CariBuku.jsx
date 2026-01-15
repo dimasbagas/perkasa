@@ -24,7 +24,12 @@ const CariBuku = () => {
         value={searchTerm}
         onChangeText={setSearchTerm}
         returnKeyType="search"
-        onSubmitEditing={() => router.push("/page/CariJudulBuku")}
+        onSubmitEditing={() =>
+          router.push({
+            pathname: "/cari-judul-buku/PencarianBuku",
+            params: { q: searchTerm },
+          })
+        }
       />
     </View>
   );
@@ -34,9 +39,8 @@ export default CariBuku;
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",      
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
     alignSelf: "center",
     width: width * 0.9,
     height: 49,
@@ -47,8 +51,7 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   input: {
-    flex: 1,            
+    flex: 1,
     marginLeft: 8,
-    
   },
 });

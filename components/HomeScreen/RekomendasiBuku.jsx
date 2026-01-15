@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  Image,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
 import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-const API_KEY = "AIzaSyAdkiRhqRdPGg4jym8ZrzzUhoHk33aBxZI";
+import { API } from "../../utils/api";
 
 const Home = () => {
   const router = useRouter();
@@ -22,16 +22,11 @@ const Home = () => {
 
   const fetchBooks = async () => {
     try {
-      const response = await fetch(
-        `https://www.googleapis.com/books/v1/volumes?q=programming&maxResults=40&key=${API_KEY}`
-      );
-      const json = await response.json();
+      const response = await fetch(API.biblioList);
+      const data = await response.json();
 
-      const filtered = (json.items || [])
-        .filter((item) => item.volumeInfo?.imageLinks?.thumbnail)
-        .slice(0, 10);
-
-      setBooks(filtered);
+      const mapped = data.slice(0, 10).map(mapBiblioBook);
+      setBooks(mapped);
     } catch (error) {
       console.log("Error fetch books:", error);
       setBooks([]);
@@ -41,31 +36,24 @@ const Home = () => {
   };
 
   const renderItem = ({ item }) => {
-    const info = item.volumeInfo;
-
-const imageUrl =
-  "http://books.google.com/books/content?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=4&edge=curl&imgtk=...&source=gbs_api"
-    .replace("http://", "https://");
-
-
     return (
       <TouchableOpacity
         style={styles.bookItem}
         activeOpacity={0.8}
         onPress={() =>
           router.push({
-            pathname: "/(user)/DetailBuku",
+            pathname: "/Detailbuku",
             params: { id: item.id },
           })
         }
       >
         <Image
-          source={{ uri: imageUrl }}
+          source={{ uri: item.cover }}
           style={styles.cover}
           resizeMode="cover"
         />
         <Text style={styles.title} numberOfLines={2}>
-          {info.title}
+          {item.title}
         </Text>
       </TouchableOpacity>
     );
@@ -94,6 +82,12 @@ const imageUrl =
 };
 
 export default Home;
+
+const mapBiblioBook = (item) => ({
+  id: item.biblio_id,
+  title: item.title || "-",
+  cover: item.image ? `http://opac.pamekasankab.go.id:8000/images/${item.image}` : "https://via.placeholder.com/150x220?text=No+Cover",
+});
 
 const styles = StyleSheet.create({
   container: {

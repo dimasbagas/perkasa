@@ -1,24 +1,27 @@
-import React, { useState } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  TextInput,
   FlatList,
   Image,
-  TouchableOpacity,
   StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { useRouter } from "expo-router";
 
-const API_KEY = "AIzaSyAdkiRhqRdPGg4jym8ZrzzUhoHk33aBxZI";
+import { API } from "../../../utils/api";
 
 const PencarianBuku = () => {
   const router = useRouter();
-  const [query, setQuery] = useState("");
+  const { q } = useLocalSearchParams();
+
+  const [query, setQuery] = useState(q ?? "");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [allBooks, setAllBooks] = useState([]);
 
-  const searchBooks = async (text) => {
+  const searchBooks = (text) => {
     setQuery(text);
 
     if (text.length < 3) {
@@ -26,33 +29,37 @@ const PencarianBuku = () => {
       return;
     }
 
-    try {
-      setLoading(true);
-      const res = await fetch(
-        `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
-          text
-        )}&maxResults=20&key=${API_KEY}`
-      );
-      const json = await res.json();
-
-      const mapped =
-        json.items?.map((item) => mapGoogleBook(item)) || [];
-
-      setResults(mapped);
-    } catch (e) {
-      console.log(e);
-      setResults([]);
-    } finally {
-      setLoading(false);
-    }
+    const filtered = allBooks.filter(book => book.title && book.title.toLowerCase().includes(text.toLowerCase()));
+    setResults(filtered.map(mapBiblioBook));
   };
+
+  // auto search saat datang dari search bar
+  useEffect(() => {
+    if (q) {
+      searchBooks(q);
+    }
+  }, [q]);
+
+  useEffect(() => {
+    const fetchAllBooks = async () => {
+      try {
+        const res = await fetch(API.biblioList);
+        const data = await res.json();
+        setAllBooks(data);
+      } catch (e) {
+        console.log(e);
+        setAllBooks([]);
+      }
+    };
+    fetchAllBooks();
+  }, []);
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles.card}
       onPress={() =>
         router.push({
-          pathname: "/DetailBuku",
+          pathname: "/Detailbuku",
           params: { id: item.id },
         })
       }
@@ -69,7 +76,6 @@ const PencarianBuku = () => {
 
   return (
     <View style={styles.container}>
-      {/* INPUT SEARCH */}
       <TextInput
         placeholder="Cari judul atau penulis buku..."
         value={query}
@@ -98,13 +104,11 @@ const PencarianBuku = () => {
 
 export default PencarianBuku;
 
-const mapGoogleBook = (item) => ({
-  id: item.id,
-  title: item.volumeInfo.title,
-  author: item.volumeInfo.authors?.join(", ") ?? "-",
-  cover:
-    item.volumeInfo.imageLinks?.thumbnail?.replace("http://", "https://") ??
-    "https://via.placeholder.com/150x220?text=No+Cover",
+const mapBiblioBook = (item) => ({
+  id: item.biblio_id,
+  title: item.title || "-",
+  author: "-",
+  cover: "https://via.placeholder.com/150x220?text=No+Cover",
 });
 
 const styles = StyleSheet.create({
