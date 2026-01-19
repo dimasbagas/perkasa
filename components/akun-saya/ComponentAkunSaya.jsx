@@ -154,7 +154,7 @@ export default ComponentAkunSaya;
 const styles = StyleSheet.create({
   container: {
     width: "90%",
-    marginTop: 90,
+    marginTop: 60,
     marginBottom: 20,
     alignSelf: "center",
   },

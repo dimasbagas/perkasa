@@ -160,11 +160,11 @@ const Login = () => {
               </View>
             </View>
 
-            <View style={{ alignItems: "flex-end" }}>
+            <View style={{ alignItems: "flex-end", width: 330 }}>
               <TouchableOpacity
                 onPress={() => router.push("/user/LupaSandiScreen")}
               >
-                <Text style={{ color: "#0F612F" }}>Lupa Password?</Text>
+                <Text style={{ color: "#0F612F", textAlign: "right" }}>Lupa Password?</Text>
               </TouchableOpacity>
             </View>
 
@@ -232,7 +232,7 @@ const style = StyleSheet.create({
     alignItems: "center",
     marginTop: 20,
     elevation: 3,
-    width: 200,
+    width: 330,
   },
   buttonText: {
     color: "#f0f0f0",
