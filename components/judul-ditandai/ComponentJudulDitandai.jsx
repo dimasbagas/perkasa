@@ -63,7 +63,6 @@ const ComponentJudulDitandai = () => {
     }, [])
   );
 
-
     //  HAPUS BUKU DARI DITANDAI
   const removeBook = async (id) => {
     try {
