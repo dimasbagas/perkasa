@@ -1,5 +1,4 @@
 import {
-  SafeAreaView,
   Text,
   View,
   FlatList,
@@ -7,9 +6,10 @@ import {
 } from "react-native";
 
 import RekomendasiBuku from "../../components/HomeScreen/RekomendasiBuku";
-import Search from "../../components/HomeScreen/Search";
+// import Search from "../../components/HomeScreen/Search";
 import KategoriTema from "../../components/tema/KategoriTema";
 import BukuPopuler from "../../components/HomeScreen/BukuPopuler";
+import CariBuku from "../../components/HomeScreen/CariBuku";
 
 const HomePage = () => {
   const dataKategori = [
@@ -19,16 +19,17 @@ const HomePage = () => {
     { id: "sejarah", name: "Sejarah" },
     { id: "hukum", name: "Hukum" },
   ];
-
+  
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <FlatList
         data={[{ key: "content" }]}
         keyExtractor={(item) => item.key}
         showsVerticalScrollIndicator={false}
         renderItem={() => (
           <>
-            <Search />
+            {/* <Search /> */}
+            <CariBuku/>
 
             <View style={{ paddingVertical: 16 }}>
               <KategoriTema data={dataKategori} />
@@ -46,7 +47,7 @@ const HomePage = () => {
           </>
         )}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -55,7 +56,7 @@ export default HomePage;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f0f0f0f0",
+    backgroundColor: "#fffffff0",
     paddingTop: 40,
   },
   section: {
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 22,
     fontWeight: "600",
-    color: "#305763",
+    color: "#000000",
     paddingLeft: 20,
     marginBottom: 10,
   },

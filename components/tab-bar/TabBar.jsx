@@ -2,7 +2,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const TabBar = ({ state, navigation }) => {
   const activeColor = '#0F612F';
-  const inactiveColor = '#5a5860ff';
+  const inactiveColor = '#ffffffff';
 
   const icons = {
     HomePage: require('../../assets/icons/Home.png'),
@@ -75,41 +75,27 @@ const TabBar = ({ state, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: 25,
-    left: 20,
-    right: 20,
-
+    bottom: 50,
+    left: 19,
+    right: 19,
     flexDirection: 'row',
-    justifyContent: 'space-around', 
-    alignItems: 'center',
-
-    backgroundColor: '#70A284',
-    paddingVertical: 12,
-    borderRadius: 28,
+    backgroundColor: '#16994aff',
+    paddingVertical: 5,
+    borderRadius: 20,
     borderCurve: 'continuous',
-    
-
-    shadowColor: '#000',
+    shadowColor: '#86f08fff',
     shadowOpacity: 0.15,
     shadowOffset: { width: 0, height: 5 },
-    shadowRadius: 12,
+    shadowRadius: 4,
     elevation: 5,
+    justifyContent: 'center',
   },
 
   tabItem: {
     alignItems: 'center',
-    justifyContent: 'center',
+    marginHorizontal: 10,
   },
 
-  icon: {
-    width: 36,
-    height: 36,
-  },
-
-  label: {
-    marginTop: 4,
-    fontSize: 12,
-  },
 });
 
 export default TabBar;

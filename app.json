@@ -1,21 +1,23 @@
 {
   "expo": {
     "name": "perpuskab",
-    "slug": "perpuskab",
+    "slug": "perpus",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/2.png",
+    "icon": "./assets/images/pemda.png",
     "scheme": "perpuskab",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
-    
-    
+    "newArchEnabled": false,
+    "splash": {
+      "backgroundColor": "#ffffff"
+    },
     "ios": {
       "supportsTablet": true
     },
     "android": {
+      "package": "com.dimasbagas.perpuskab",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/1.png",
+        "foregroundImage": "./assets/images/pemda.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true
@@ -23,22 +25,30 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/2.png"
+      "favicon": "./assets/images/pemda.png"
     },
     "plugins": [
       "expo-router",
+      "expo-font",
       [
-        "expo-splash-screen",
+        "expo-build-properties",
         {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "android": {
+            "kotlinVersion": "2.0.21",
+            "extraGradleParams": "-Xmx4g"
+          }
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "ec5d405d-1b8e-4db4-beb0-7166f08164f2"
+      }
+    },
+    "owner": "dimasbagas"
   }
 }

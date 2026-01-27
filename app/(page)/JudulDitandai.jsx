@@ -1,6 +1,5 @@
 import {
   ImageBackground,
-  SafeAreaView,
   StyleSheet,
   Text,
   View,
@@ -10,7 +9,7 @@ import ComponentJudulDitandai from "../../components/judul-ditandai/ComponentJud
 
 const PinjamanTerkini = () => {
   return (
-    <SafeAreaView style={style.containerContent}>
+    <View style={style.containerContent}>
       <View style={{ justifyContent: "flex-start", width: "100%" }}>
         <View style={style.titleContainer}>
           <ImageBackground
@@ -33,7 +32,7 @@ const PinjamanTerkini = () => {
       </View>
       {/* Bawah */}
       <ComponentJudulDitandai />
-    </SafeAreaView>
+    </View>
   );
 };
 export default PinjamanTerkini;
@@ -45,7 +44,7 @@ const style = StyleSheet.create({
     backgroundColor: "#fffffff0",
   },
   titleContainer: {
-    backgroundColor: "#0F612F",
+    backgroundColor: "#16994aff",
     width: "100%",
     borderBottomRightRadius: 100,
     justifyContent: "flex-end",

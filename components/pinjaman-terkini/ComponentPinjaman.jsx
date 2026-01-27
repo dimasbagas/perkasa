@@ -158,7 +158,7 @@ const style = StyleSheet.create({
   extendBtn: {
     alignSelf: "flex-end",
     marginTop: 8,
-    backgroundColor: "#0F612F",
+    backgroundColor: "#01931aff",
     paddingHorizontal: 14,
     paddingVertical: 6,
     borderRadius: 10,

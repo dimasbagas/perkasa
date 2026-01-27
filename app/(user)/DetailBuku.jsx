@@ -1,20 +1,25 @@
-import React, { useEffect, useState, useCallback } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useLocalSearchParams } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import {
-  View,
-  Text,
   Image,
   ScrollView,
   StyleSheet,
+  Text,
   TouchableOpacity,
+  View,
 } from "react-native";
-import { useLocalSearchParams } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Ionicons } from "@expo/vector-icons";
 
 const API_KEY = "AIzaSyAdkiRhqRdPGg4jym8ZrzzUhoHk33aBxZI";
+const STORAGE_KEY = "saved_books";
 
 const DetailBuku = () => {
-  const { id } = useLocalSearchParams();
+  const params = useLocalSearchParams();
+
+  // 🔐 NORMALISASI ID (INI KUNCI)
+  const rawId = Array.isArray(params.id) ? params.id[0] : params.id;
+  const bookId = rawId ? String(rawId) : null;
 
   const [book, setBook] = useState(null);
   const [saved, setSaved] = useState(false);
@@ -23,55 +28,67 @@ const DetailBuku = () => {
      FETCH DETAIL BUKU
      ========================= */
   const fetchDetail = useCallback(async () => {
+    if (!bookId) return;
     try {
       const res = await fetch(
-        `https://www.googleapis.com/books/v1/volumes/${id}?key=${API_KEY}`
+        `https://www.googleapis.com/books/v1/volumes/${bookId}?key=${API_KEY}`,
       );
       const json = await res.json();
       setBook(mapGoogleBook(json));
     } catch (error) {
       console.log("Error fetch detail:", error);
     }
-  }, [id]);
+  }, [bookId]);
 
   /* =========================
      CEK STATUS TERSIMPAN
      ========================= */
   const checkSaved = useCallback(async () => {
+    if (!bookId) return;
     try {
-      const data = await AsyncStorage.getItem("saved_books");
-      const ids = data ? JSON.parse(data) : [];
-      setSaved(ids.includes(id));
+      const data = await AsyncStorage.getItem(STORAGE_KEY);
+      const ids = Array.isArray(JSON.parse(data))
+        ? JSON.parse(data).filter((x) => typeof x === "string")
+        : [];
+
+      // console.log(`[DetailBuku] Checking ID: ${bookId}, Saved IDs:`, ids);
+      const isSaved = ids.includes(bookId);
+      setSaved(isSaved);
     } catch (error) {
       console.log("Error check saved:", error);
+      setSaved(false);
     }
-  }, [id]);
+  }, [bookId]);
 
   /* =========================
      EFFECT
      ========================= */
   useEffect(() => {
+    if (!bookId) return;
     fetchDetail();
     checkSaved();
-  }, [fetchDetail, checkSaved]);
+  }, [fetchDetail, checkSaved, bookId]);
 
   /* =========================
      SIMPAN / HAPUS FAVORIT
      ========================= */
   const toggleSave = async () => {
     try {
-      const data = await AsyncStorage.getItem("saved_books");
+      const data = await AsyncStorage.getItem(STORAGE_KEY);
       let ids = data ? JSON.parse(data) : [];
 
-      if (ids.includes(id)) {
-        ids = ids.filter((x) => x !== id);
+      // 🔒 PAKSA ARRAY STRING
+      ids = Array.isArray(ids) ? ids.filter((x) => typeof x === "string") : [];
+
+      if (ids.includes(bookId)) {
+        ids = ids.filter((x) => x !== bookId);
         setSaved(false);
       } else {
-        ids.push(id);
+        ids.push(bookId);
         setSaved(true);
       }
 
-      await AsyncStorage.setItem("saved_books", JSON.stringify(ids));
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
     } catch (error) {
       console.log("Error toggle save:", error);
     }
@@ -122,13 +139,9 @@ const mapGoogleBook = (item) => ({
   title: item.volumeInfo?.title ?? "-",
   author: item.volumeInfo?.authors?.join(", ") ?? "-",
   cover:
-    item.volumeInfo?.imageLinks?.thumbnail?.replace(
-      "http://",
-      "https://"
-    ) ??
+    item.volumeInfo?.imageLinks?.thumbnail?.replace("http://", "https://") ??
     "https://via.placeholder.com/150x220?text=No+Cover",
-  description:
-    item.volumeInfo?.description ?? "Tidak ada deskripsi",
+  description: item.volumeInfo?.description ?? "Tidak ada deskripsi",
   rating: item.volumeInfo?.averageRating ?? null,
   pages: item.volumeInfo?.pageCount ?? null,
 });

@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import {
-  View,
-  Text,
   FlatList,
   Image,
-  TouchableOpacity,
   StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
 
 const API_KEY = "AIzaSyAdkiRhqRdPGg4jym8ZrzzUhoHk33aBxZI";
 
@@ -28,47 +28,48 @@ const kategoriQuery = {
 };
 
 const KategoriTemaPage = () => {
-  const { id } = useLocalSearchParams(); 
+  const { id } = useLocalSearchParams();
   const router = useRouter();
 
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchByKategori();
-  }, [id]);
+    const fetchByKategori = async () => {
+      try {
+        setLoading(true);
+        const q = kategoriQuery[id];
 
-  const fetchByKategori = async () => {
-    try {
-      setLoading(true);
-      const q = kategoriQuery[id];
+        const res = await fetch(
+          `https://www.googleapis.com/books/v1/volumes?q=subject:${q}&maxResults=40&key=${API_KEY}`,
+        );
+        const json = await res.json();
 
-      const res = await fetch(
-        `https://www.googleapis.com/books/v1/volumes?q=subject:${q}&maxResults=40&key=${API_KEY}`
-      );
-      const json = await res.json();
+        const data =
+          json.items?.map((item) => ({
+            id: item.id,
+            title: item.volumeInfo.title,
+            author: item.volumeInfo.authors?.join(", ") ?? "-",
+            cover:
+              item.volumeInfo.imageLinks?.thumbnail?.replace(
+                "http://",
+                "https://",
+              ) ?? "https://via.placeholder.com/150x220?text=No+Cover",
+          })) || [];
 
-      const data =
-        json.items?.map((item) => ({
-          id: item.id,
-          title: item.volumeInfo.title,
-          author: item.volumeInfo.authors?.join(", ") ?? "-",
-          cover:
-            item.volumeInfo.imageLinks?.thumbnail?.replace(
-              "http://",
-              "https://"
-            ) ??
-            "https://via.placeholder.com/150x220?text=No+Cover",
-        })) || [];
+        setBooks(data);
+      } catch (e) {
+        console.log(e);
+        setBooks([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      setBooks(data);
-    } catch (e) {
-      console.log(e);
-      setBooks([]);
-    } finally {
-      setLoading(false);
+    if (id) {
+      fetchByKategori();
     }
-  };
+  }, [id]);
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
@@ -90,9 +91,7 @@ const KategoriTemaPage = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>
-        Kategori {kategoriLabel[id]}
-      </Text>
+      <Text style={styles.header}>Kategori {kategoriLabel[id]}</Text>
 
       {loading && <Text style={styles.info}>Memuat buku...</Text>}
 
@@ -142,12 +141,12 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    width: "48%",              
+    width: "48%",
   },
 
   cover: {
     width: "100%",
-    height: 240,            
+    height: 240,
     borderRadius: 16,
     backgroundColor: "#e5e5e5",
   },

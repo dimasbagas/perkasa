@@ -7,11 +7,13 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 
 const API_KEY = "AIzaSyAdkiRhqRdPGg4jym8ZrzzUhoHk33aBxZI";
+const STORAGE_KEY = "saved_books";
 
-const Home = () => {
+const BukuPopuler = () => {
   const router = useRouter();
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -40,30 +42,47 @@ const Home = () => {
     }
   };
 
+  // ✅ SIMPAN ID BUKU KE JUDUL DITANDAI
+  const saveBook = async (id) => {
+    try {
+      const data = await AsyncStorage.getItem(STORAGE_KEY);
+      let ids = data ? JSON.parse(data) : [];
+
+      if (!ids.includes(id)) {
+        ids.push(id);
+        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
+      }
+    } catch (e) {
+      console.log("Error save book:", e);
+    }
+  };
+
   const renderItem = ({ item }) => {
     const info = item.volumeInfo;
 
-const imageUrl =
-  "http://books.google.com/books/content?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=4&edge=curl&imgtk=...&source=gbs_api"
-    .replace("http://", "https://");
-
+    const imageUrl = info.imageLinks.thumbnail.replace(
+      "http://",
+      "https://"
+    );
 
     return (
       <TouchableOpacity
         style={styles.bookItem}
         activeOpacity={0.8}
-        onPress={() =>
+        onPress={() => {
+          saveBook(item.id); // 🔥 INI KUNCI UTAMA
           router.push({
             pathname: "/(user)/DetailBuku",
             params: { id: item.id },
-          })
-        }
+          });
+        }}
       >
         <Image
           source={{ uri: imageUrl }}
           style={styles.cover}
           resizeMode="cover"
         />
+
         <Text style={styles.title} numberOfLines={2}>
           {info.title}
         </Text>
@@ -93,12 +112,10 @@ const imageUrl =
   );
 };
 
-export default Home;
+export default BukuPopuler;
 
 const styles = StyleSheet.create({
-  container: {
-    // marginTop: 40,
-  },
+  container: {},
   list: {
     paddingHorizontal: 16,
   },

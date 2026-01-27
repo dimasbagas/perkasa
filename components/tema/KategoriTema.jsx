@@ -49,8 +49,8 @@ export default function KategoriTema({ data = [] }) {
 }
 const styles = StyleSheet.create({
   wrapper: {
-    marginTop: 10,
-    marginBottom: 5,
+    // marginTop: 10,
+    // marginBottom: 5,
     height: 70,
   },
   title: {

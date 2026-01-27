@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     width: "100%",
     height: 230,
-    backgroundColor: "#01931aff",
+    backgroundColor: "#16994aff",
     borderBottomLeftRadius: 120,
     borderBottomRightRadius: 120,
     overflow: "hidden",

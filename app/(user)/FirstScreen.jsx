@@ -23,7 +23,7 @@ const FirstScreen = () => {
     ]).start();
 
     const timer = setTimeout(() => {
-      router.replace("/(user)/Login");
+      router.replace("/(page)/HomePage");
     }, 5000);
 
     return () => clearTimeout(timer);
